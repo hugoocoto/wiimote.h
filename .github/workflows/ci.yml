@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - cc: gcc
+            cxx: g++
+          - cc: clang
+            cxx: clang++
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install libbluetooth
+        run: sudo apt-get update && sudo apt-get install -y libbluetooth-dev
+      - name: Build and test
+        run: make check CC=${{ matrix.cc }} CXX=${{ matrix.cxx }}
